@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#151515">
+  <script>
+    // Apply the correct theme before the page is painted. Times use device local time.
+    const initialHour = new Date().getHours();
+    document.documentElement.dataset.theme = initialHour >= 7 && initialHour < 19 ? "light" : "dark";
+  </script>
   <meta name="description" content="Measure your internet speed and understand your connection with Tereeza Network Health Advisor.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,74 +23,77 @@
   <style>
     :root {
       font-family: Inter, system-ui, -apple-system, sans-serif;
-      color: #f5f2eb;
-      background: #151515;
+      color-scheme: dark;
+      --bg: #151515;
+      --text: #f5f2eb;
+      --surface: #212121;
+      --border: #393939;
+      --muted: #b8b8b8;
+      --subtle: #aaa;
+      --description: #ccc;
+      --accent: #ffaa00;
+      --track: #383838;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #faf8f2;
+      --text: #22201d;
+      --surface: #fff;
+      --border: #e5dfd2;
+      --muted: #655f55;
+      --subtle: #6d665d;
+      --description: #48433b;
+      --accent: #a76600;
+      --track: #e6dfd2;
     }
 
     * { box-sizing: border-box; }
-    body { margin: 0; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
 
     .wrap { max-width: 900px; margin: auto; padding: 24px 20px 60px; }
-    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid #343434; padding-bottom: 18px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
     .logo { width: min(240px, 56vw); height: auto; }
-    .powered { font-size: 11px; color: #a9a9a9; letter-spacing: 1px; }
+    :root[data-theme="light"] .logo { background: #151515; border-radius: 10px; padding: 7px 10px; }
+    .powered { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
     .hero { text-align: center; margin: 64px 0 34px; }
-    .eyebrow { color: #b8b8b8; font-size: 16px; }
-    .speed { font-weight: 800; color: #ffaa00; font-size: clamp(65px, 16vw, 132px); letter-spacing: -.06em; line-height: 1.25; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-    .unit { font-size: clamp(17px, 3vw, 27px); color: #f5f2eb; letter-spacing: 0; }
-    .status { min-height: 24px; color: #b8b8b8; }
+    .eyebrow { color: var(--muted); font-size: 16px; }
+    .speed { font-weight: 800; color: var(--accent); font-size: clamp(65px, 16vw, 132px); letter-spacing: -.06em; line-height: 1.25; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+    .unit { font-size: clamp(17px, 3vw, 27px); color: var(--text); letter-spacing: 0; }
+    .status { min-height: 24px; color: var(--muted); }
     .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .metric, .advisor { background: #212121; border: 1px solid #393939; border-radius: 16px; padding: 20px; }
-    .metric small { display: block; color: #aaa; margin-bottom: 12px; }
+    .metric, .advisor { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+    .metric small { display: block; color: var(--subtle); margin-bottom: 12px; }
     .metric strong { font-size: 27px; font-variant-numeric: tabular-nums; }
-    .metric em { font-size: 12px; color: #aaa; font-style: normal; }
+    .metric em { font-size: 12px; color: var(--subtle); font-style: normal; }
     .advisor { margin-top: 16px; }
     .advisor h2 { font-size: 18px; margin: 0 0 12px; }
-    .advisor p { line-height: 1.6; color: #ccc; margin: 0; }
-    .accent { color: #ffaa00; }
+    .advisor p { line-height: 1.6; color: var(--description); margin: 0; }
+    .accent { color: var(--accent); }
     button { width: 100%; border: 0; border-radius: 12px; background: #ffaa00; color: #161616; font-weight: 800; font-size: 16px; padding: 17px; margin-top: 22px; cursor: pointer; }
     button:disabled { opacity: .65; cursor: wait; }
-    .install { background: transparent; color: #ffaa00; border: 1px solid #ffaa00; margin-top: 10px; }
+    .install { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; }
     .install[hidden] { display: none; }
-    footer { text-align: center; color: #999; font-size: 12px; line-height: 1.7; margin-top: 30px; }
-    a { color: #ffaa00; }
+    footer { text-align: center; color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 30px; }
+    a { color: var(--accent); }
 
-    /* Speed test progress indicator (unchanged). */
+    /* Speed test progress indicator — Uiverse 3D rings, Tereeza colors. */
     .test-loader[hidden] { display: none !important; }
-    .test-loader { margin: 20px auto 0; max-width: 360px; text-align: center; animation: fade-in .2s ease; }
-    .loader-dial { width: 76px; height: 76px; margin: 0 auto 12px; border: 5px solid #393939; border-top-color: #ffaa00; border-right-color: #ffaa00; border-radius: 50%; animation: spin .9s linear infinite; }
-    .loader-label { font-size: 13px; color: #e9e3d7; }
-    .loader-track { height: 5px; background: #383838; border-radius: 20px; overflow: hidden; margin-top: 12px; }
+    .test-loader { margin: 18px auto 0; max-width: 360px; text-align: center; animation: fade-in .2s ease; }
+    .loader-label { font-size: 13px; color: var(--text); }
+    .loader-track { height: 5px; background: var(--track); border-radius: 20px; overflow: hidden; margin-top: 12px; }
     .loader-fill { height: 100%; width: 0; background: #ffaa00; transition: width .4s ease; }
-    .loader-percent { font-size: 12px; color: #aaa; margin-top: 8px; }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-percent { font-size: 12px; color: var(--subtle); margin-top: 8px; }
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-
-    /* Startup splash overlay. */
-    #launch-splash {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #151515;
-      color: #f5f2eb;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity .35s ease, visibility .35s ease;
-    }
-    #launch-splash.is-ready { opacity: 0; visibility: hidden; pointer-events: none; }
-    .launch-inner { width: min(82vw, 320px); display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
-    .launch-title { font-size: 20px; font-weight: 800; letter-spacing: .13em; }
-    .launch-subtitle { font-size: 12px; color: #b8b8b8; letter-spacing: .02em; }
 
     /*
     From Uiverse.io by Pradeepsaranbishnoi - https://uiverse.io/Pradeepsaranbishnoi/fast-cobra-20
     MIT License, Copyright (c) Pradeepsaranbishnoi (Pradeep Saran)
     */
     .tereeza-ring-loader {
+      margin: 0 auto 12px;
       width: 200px;
       height: 200px;
       perspective: 200px;
@@ -100,7 +108,7 @@
       margin-top: -60px;
       margin-left: -60px;
       border-radius: 100px;
-      border: 40px outset #1e3f57;
+      border: 40px outset #ffaa00;
       transform-origin: 50% 50%;
       transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
       background-color: transparent;
@@ -112,7 +120,7 @@
       margin-top: -70px;
       margin-left: -70px;
       border-width: 30px;
-      border-color: #447891;
+      border-color: #df8e00;
       animation-name: tereeza-dot2;
       animation-delay: 75ms;
       box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1);
@@ -124,23 +132,23 @@
       margin-top: -80px;
       margin-left: -80px;
       border-width: 20px;
-      border-color: #6bb2cd;
+      border-color: #ffe0a0;
       animation-name: tereeza-dot3;
       animation-delay: 150ms;
       box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1);
       transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
     }
     @keyframes tereeza-dot1 {
-      0%, 100% { border-color: #1e3f57; transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
-      50% { border-color: #1e574f; transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
+      0%, 100% { border-color: #ffaa00; transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
+      50% { border-color: #00e676; transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
     }
     @keyframes tereeza-dot2 {
-      0%, 100% { border-color: #447891; box-shadow: inset 0 0 15px 0 rgba(255, 255, 255, .2); transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
-      50% { border-color: #449180; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .8); transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
+      0%, 100% { border-color: #df8e00; box-shadow: inset 0 0 15px 0 rgba(255, 255, 255, .2); transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
+      50% { border-color: #00b95d; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .8); transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
     }
     @keyframes tereeza-dot3 {
-      0%, 100% { border-color: #6bb2cd; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1); transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
-      50% { border-color: #6bcdb2; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .8); transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
+      0%, 100% { border-color: #ffe0a0; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1); transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
+      50% { border-color: #65f0a4; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .8); transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
     }
 
     @media (max-width: 520px) {
@@ -153,28 +161,12 @@
       .hero { margin-top: 55px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .loader-dial, .tereeza-ring-dot { animation: none; }
-      .loader-fill, #launch-splash { transition: none; }
+      .tereeza-ring-dot { animation: none; }
+      .loader-fill { transition: none; }
     }
   </style>
 </head>
 <body>
-  <!--
-  From Uiverse.io by Pradeepsaranbishnoi - https://uiverse.io/Pradeepsaranbishnoi/fast-cobra-20
-  MIT License, Copyright (c) Pradeepsaranbishnoi (Pradeep Saran)
-  -->
-  <div id="launch-splash" role="status" aria-label="Loading Tereeza Speed" aria-live="polite">
-    <div class="launch-inner">
-      <div class="tereeza-ring-loader" aria-hidden="true">
-        <div class="tereeza-ring-dot"></div>
-        <div class="tereeza-ring-dot"></div>
-        <div class="tereeza-ring-dot"></div>
-      </div>
-      <div class="launch-title">TEREEZA SPEED</div>
-      <div class="launch-subtitle">Initializing your experience…</div>
-    </div>
-  </div>
-
   <main class="wrap">
     <header>
       <img class="logo" src="/logo.png" alt="Tereeza">
@@ -186,7 +178,15 @@
       <div class="speed"><span id="speed">—</span><span class="unit"> Mbps</span></div>
       <div id="status" class="status" role="status" aria-live="polite">Ready to test your internet connection</div>
       <div id="test-loader" class="test-loader" hidden role="status" aria-live="polite">
-        <div class="loader-dial" aria-hidden="true"></div>
+        <!--
+        From Uiverse.io by Pradeepsaranbishnoi - https://uiverse.io/Pradeepsaranbishnoi/fast-cobra-20
+        MIT License, Copyright (c) Pradeepsaranbishnoi (Pradeep Saran)
+        -->
+        <div class="tereeza-ring-loader" aria-hidden="true">
+          <div class="tereeza-ring-dot"></div>
+          <div class="tereeza-ring-dot"></div>
+          <div class="tereeza-ring-dot"></div>
+        </div>
         <div id="loader-label" class="loader-label">Connecting to test server…</div>
         <div class="loader-track" aria-hidden="true"><div id="loader-fill" class="loader-fill"></div></div>
         <div id="loader-percent" class="loader-percent">Preparing test</div>
@@ -215,30 +215,18 @@
   </main>
 
   <script>
-    // Remove startup splash when the document has rendered; prevent a stuck overlay.
-    (() => {
-      const splash = document.getElementById('launch-splash');
-      let dismissed = false;
-
-      function dismiss() {
-        if (dismissed) return;
-        dismissed = true;
-        splash.classList.add('is-ready');
-        setTimeout(() => splash.remove(), 450);
-      }
-
-      function ready() {
-        requestAnimationFrame(() => requestAnimationFrame(dismiss));
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', ready, { once: true });
-      } else {
-        ready();
-      }
-
-      setTimeout(dismiss, 3500);
-    })();
+    // Update at the next 07:00/19:00 boundary without requiring a reload.
+    function applyScheduledTheme() {
+      const hour = new Date().getHours();
+      const theme = hour >= 7 && hour < 19 ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#faf8f2' : '#151515';
+    }
+    applyScheduledTheme();
+    setInterval(applyScheduledTheme, 30_000);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) applyScheduledTheme();
+    });
   </script>
 
   <script>
