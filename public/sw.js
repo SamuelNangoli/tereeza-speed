@@ -1,6 +1,6 @@
 // Cache only the application shell; never cache speed-test traffic.
-const CACHE = 'tereeza-speed-shell-v1';
-const SHELL = ['/', '/index.html', '/logo.png', '/favicon.png', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png'];
+const CACHE = 'tereeza-speed-shell-v3';
+const SHELL = ['/', '/index.html', '/logo.png', '/favicon.png', '/favicon.svg', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
