@@ -1,66 +1,407 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151515"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="alternate icon" type="image/png" href="/favicon.png"><link rel="apple-touch-icon" href="/icons/icon-192.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Tereeza Speed"><meta name="description" content="Measure your internet speed and understand your connection with Tereeza Network Health Advisor."><title>Tereeza Speed — Understand your internet</title><style>
-:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#f5f2eb;background:#151515}*{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:24px 20px 60px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #343434;padding-bottom:18px}.logo{width:min(240px,56vw);height:auto}.powered{font-size:11px;color:#a9a9a9;letter-spacing:1px}.hero{text-align:center;margin:64px 0 34px}.eyebrow{color:#b8b8b8;font-size:16px}.speed{font-weight:800;color:#ffaa00;font-size:clamp(65px,16vw,132px);letter-spacing:-.06em;line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.unit{font-size:clamp(17px,3vw,27px);color:#f5f2eb;letter-spacing:0}.status{min-height:24px;color:#b8b8b8}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric,.advisor{background:#212121;border:1px solid #393939;border-radius:16px;padding:20px}.metric small{display:block;color:#aaa;margin-bottom:12px}.metric strong{font-size:27px;font-variant-numeric:tabular-nums}.metric em{font-size:12px;color:#aaa;font-style:normal}.advisor{margin-top:16px}.advisor h2{font-size:18px;margin:0 0 12px}.advisor p{line-height:1.6;color:#ccc;margin:0}.accent{color:#ffaa00}button{width:100%;border:0;border-radius:12px;background:#ffaa00;color:#161616;font-weight:800;font-size:16px;padding:17px;margin-top:22px;cursor:pointer}button:disabled{opacity:.65;cursor:wait}.install{background:transparent;color:#ffaa00;border:1px solid #ffaa00;margin-top:10px}.install[hidden]{display:none}footer{text-align:center;color:#999;font-size:12px;line-height:1.7;margin-top:30px}a{color:#ffaa00}@media(max-width:520px){.wrap{padding:16px 12px 40px}.powered{font-size:9px}.metrics{gap:7px}.metric{padding:13px 8px}.metric strong{font-size:20px}.metric small{font-size:11px}.hero{margin-top:55px}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151515">
+  <meta name="description" content="Measure your internet speed and understand your connection with Tereeza Network Health Advisor.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tereeza Speed">
 
-/* Tereeza test loader */
-.test-loader[hidden]{display:none!important}.test-loader{margin:20px auto 0;max-width:360px;text-align:center;animation:fade-in .2s ease}.loader-dial{width:76px;height:76px;margin:0 auto 12px;border:5px solid #393939;border-top-color:#ffaa00;border-right-color:#ffaa00;border-radius:50%;animation:spin .9s linear infinite}.loader-label{font-size:13px;color:#e9e3d7}.loader-track{height:5px;background:#383838;border-radius:20px;overflow:hidden;margin-top:12px}.loader-fill{height:100%;width:0;background:#ffaa00;transition:width .4s ease}.loader-percent{font-size:12px;color:#aaa;margin-top:8px}@keyframes spin{to{transform:rotate(360deg)}}@keyframes fade-in{from{opacity:0}to{opacity:1}}@media(prefers-reduced-motion:reduce){.loader-dial{animation:none}.loader-fill{transition:none}}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <title>Tereeza Speed — Understand your internet</title>
 
-/* Initial launch splash — visible before the app's JavaScript executes */
-#launch-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#151515;color:#f5f2eb;opacity:1;visibility:visible;transition:opacity .35s ease,visibility .35s ease}
-#launch-splash.is-ready{opacity:0;visibility:hidden;pointer-events:none}
-.launch-inner{width:min(82vw,320px);display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
-.launch-icon{width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 0 18px rgba(255,170,0,.12))}
-.launch-title{font-size:20px;font-weight:800;letter-spacing:.13em}
-.launch-subtitle{font-size:12px;color:#b8b8b8;letter-spacing:.02em}
-.launch-spinner{width:36px;height:36px;border:3px solid #45403a;border-top-color:#ffaa00;border-radius:50%;animation:spin .8s linear infinite}
-@media(prefers-reduced-motion:reduce){#launch-splash{transition:none}.launch-spinner{animation:none;border-top-color:#ffaa00}}
-</style></head><body><div id="launch-splash" role="status" aria-label="Loading Tereeza Speed" aria-live="polite"><div class="launch-inner"><img class="launch-icon" src="/favicon.svg" alt="" width="88" height="88"><div class="launch-title">TEREEZA SPEED</div><div class="launch-spinner" aria-hidden="true"></div><div class="launch-subtitle">Initializing your experience…</div></div></div><main class="wrap"><header><img class="logo" src="/logo.png" alt="Tereeza"><span class="powered">TEREEZA SPEED</span></header><section class="hero"><div class="eyebrow">Your Internet Download Speed</div><div class="speed"><span id="speed">—</span><span class="unit"> Mbps</span></div><div id="status" class="status" role="status" aria-live="polite">Ready to test your internet connection</div><div id="test-loader" class="test-loader" hidden role="status" aria-live="polite"><div class="loader-dial" aria-hidden="true"></div><div id="loader-label" class="loader-label">Connecting to test server…</div><div class="loader-track" aria-hidden="true"><div id="loader-fill" class="loader-fill"></div></div><div id="loader-percent" class="loader-percent">Preparing test</div></div></section><section class="metrics"><div class="metric"><small>↓ Download</small><strong id="down">—</strong> <em>Mbps</em></div><div class="metric"><small>↑ Upload</small><strong id="up">—</strong> <em>Mbps</em></div><div class="metric"><small>◷ Latency</small><strong id="ping">—</strong> <em>ms</em></div></section><section class="advisor"><h2><span class="accent">✦</span> Tereeza Network Health Advisor</h2><p id="advice">Run a test to see how your connection handles everyday activities.</p></section><button id="run">Start Speed Test</button><button id="install" class="install" hidden>Install Tereeza Speed</button><footer>An internet connection is required to run a speed test. Testing against Cloudflare's remote speed test endpoint — not localhost. Results may differ from Fast.com because the destination and test methodology differ. Tests use mobile data or Wi-Fi data.<p>© Tereeza Technologies · Don't just test your internet. Understand it.</p></footer></main><script>
-(function(){
-  const splash=document.getElementById('launch-splash');
-  let dismissed=false;
-  function dismiss(){if(dismissed)return;dismissed=true;splash.classList.add('is-ready');setTimeout(()=>splash.remove(),450);}
-  function ready(){
-    const icon=splash.querySelector('img');
-    const iconReady=icon.complete ? Promise.resolve() : Promise.race([
-      new Promise(resolve=>{icon.addEventListener('load',resolve,{once:true});icon.addEventListener('error',resolve,{once:true});}),
-      new Promise(resolve=>setTimeout(resolve,1800))
-    ]);
-    iconReady.then(()=>requestAnimationFrame(()=>requestAnimationFrame(dismiss)));
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});
-  else ready();
-  // Safety net for unexpected asset loading or script issues.
-  setTimeout(dismiss,3500);
-})();
-</script><script>
-const $=id=>document.getElementById(id);
-let deferredInstallPrompt=null;
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(err => console.warn('PWA registration failed:', err)));
-}
-window.addEventListener('beforeinstallprompt', event => {
-  event.preventDefault();
-  deferredInstallPrompt=event;
-  $('install').hidden=false;
-});
-$('install').addEventListener('click', async () => {
-  if (!deferredInstallPrompt) return;
-  const prompt=deferredInstallPrompt;
-  deferredInstallPrompt=null;
-  $('install').hidden=true;
-  await prompt.prompt();
-});
-window.addEventListener('appinstalled', () => { deferredInstallPrompt=null; $('install').hidden=true; });
+  <style>
+    :root {
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      color: #f5f2eb;
+      background: #151515;
+    }
 
-const ENDPOINT='https://speed.cloudflare.com';
-let running=false;
-function loader(visible, label='', progress=null){const el=$('test-loader');el.hidden=!visible;if(!visible)return;$('loader-label').textContent=label;if(progress===null){$('loader-fill').style.width='0%';$('loader-percent').textContent='Testing…';}else{$('loader-fill').style.width=progress+'%';$('loader-percent').textContent='Stage progress '+progress+'%';}}
+    * { box-sizing: border-box; }
+    body { margin: 0; }
 
-const timeout=ms=>AbortSignal.timeout(ms);
-const rate=(bytes,elapsed)=>bytes*8/(elapsed*1000);
-const median=arr=>{const a=[...arr].sort((x,y)=>x-y);return a[Math.floor(a.length/2)]};
-async function latency(){const samples=[];for(let i=0;i<5;i++){const start=performance.now();const r=await fetch(`${ENDPOINT}/__down?bytes=0&r=${crypto.randomUUID()}`,{cache:'no-store',signal:timeout(12000)});if(!r.ok)throw Error('Remote latency request failed');await r.arrayBuffer();samples.push(performance.now()-start)}return median(samples)}
-async function download(){const samples=[];for(const bytes of [1000000,3000000,5000000]){const start=performance.now();const r=await fetch(`${ENDPOINT}/__down?bytes=${bytes}&r=${crypto.randomUUID()}`,{cache:'no-store',signal:timeout(25000)});if(!r.ok)throw Error('Remote download request failed');const received=(await r.arrayBuffer()).byteLength;const ms=performance.now()-start;if(received!==bytes)throw Error('Incomplete download');samples.push(rate(received,ms));$('speed').textContent=samples.at(-1).toFixed(1)}return median(samples)}
-async function upload(){const samples=[];const data=new Uint8Array(1000000);crypto.getRandomValues(data.subarray(0,65536));for(let i=0;i<2;i++){const start=performance.now();const r=await fetch(`${ENDPOINT}/__up?r=${crypto.randomUUID()}`,{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:data,cache:'no-store',signal:timeout(25000)});if(!r.ok)throw Error('Remote upload request failed');await r.arrayBuffer();samples.push(rate(data.length,performance.now()-start))}return median(samples)}
-function advice(d,u,p){if(p>150)return 'High latency may affect calls and gaming. Try reducing background traffic and retesting.';if(d<5)return 'Your connection may struggle with HD streaming and large downloads. Check your signal and other active devices.';if(u<2)return 'Uploads may be slow, affecting video calls and file sharing.';if(d>=25&&u>=5&&p<70)return 'Your connection looks suitable for browsing, HD streaming and most video calls. Stability can still vary.';return 'Your connection should handle basic browsing. Try reducing background downloads for smoother calls.'}
-$('run').onclick=async()=>{if(running)return;if(!navigator.onLine){$('status').textContent='Offline — connect to the internet to run a speed test';return;}running=true;loader(true,'Connecting to test server…',5);$('run').disabled=true;$('run').textContent='Testing…';$('speed').textContent='…';for(const id of ['down','up','ping'])$(id).textContent='—';$('advice').textContent='Testing a remote internet server…';try{loader(true,'Checking latency…',15);$('status').textContent='Checking internet latency…';const p=await latency();$('ping').textContent=p.toFixed(0);loader(true,'Measuring download speed…',40);$('status').textContent='Measuring internet download…';const d=await download();$('down').textContent=d.toFixed(1);$('speed').textContent=d.toFixed(1);loader(true,'Measuring upload speed…',70);$('status').textContent='Measuring internet upload…';const u=await upload();$('up').textContent=u.toFixed(1);loader(true,'Analyzing network health…',95);$('advice').textContent=advice(d,u,p);$('status').textContent='Test complete'}catch(e){console.error(e);$('status').textContent='Remote speed test failed';$('advice').textContent='The remote testing endpoint could not be reached or did not permit this request. Check your connection and browser console. No speed estimate has been invented.'}finally{loader(false);running=false;$('run').disabled=false;$('run').textContent='Test Again'}};
-</script></body></html>
+    .wrap { max-width: 900px; margin: auto; padding: 24px 20px 60px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid #343434; padding-bottom: 18px; }
+    .logo { width: min(240px, 56vw); height: auto; }
+    .powered { font-size: 11px; color: #a9a9a9; letter-spacing: 1px; }
+    .hero { text-align: center; margin: 64px 0 34px; }
+    .eyebrow { color: #b8b8b8; font-size: 16px; }
+    .speed { font-weight: 800; color: #ffaa00; font-size: clamp(65px, 16vw, 132px); letter-spacing: -.06em; line-height: 1.25; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+    .unit { font-size: clamp(17px, 3vw, 27px); color: #f5f2eb; letter-spacing: 0; }
+    .status { min-height: 24px; color: #b8b8b8; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .metric, .advisor { background: #212121; border: 1px solid #393939; border-radius: 16px; padding: 20px; }
+    .metric small { display: block; color: #aaa; margin-bottom: 12px; }
+    .metric strong { font-size: 27px; font-variant-numeric: tabular-nums; }
+    .metric em { font-size: 12px; color: #aaa; font-style: normal; }
+    .advisor { margin-top: 16px; }
+    .advisor h2 { font-size: 18px; margin: 0 0 12px; }
+    .advisor p { line-height: 1.6; color: #ccc; margin: 0; }
+    .accent { color: #ffaa00; }
+    button { width: 100%; border: 0; border-radius: 12px; background: #ffaa00; color: #161616; font-weight: 800; font-size: 16px; padding: 17px; margin-top: 22px; cursor: pointer; }
+    button:disabled { opacity: .65; cursor: wait; }
+    .install { background: transparent; color: #ffaa00; border: 1px solid #ffaa00; margin-top: 10px; }
+    .install[hidden] { display: none; }
+    footer { text-align: center; color: #999; font-size: 12px; line-height: 1.7; margin-top: 30px; }
+    a { color: #ffaa00; }
+
+    /* Speed test progress indicator (unchanged). */
+    .test-loader[hidden] { display: none !important; }
+    .test-loader { margin: 20px auto 0; max-width: 360px; text-align: center; animation: fade-in .2s ease; }
+    .loader-dial { width: 76px; height: 76px; margin: 0 auto 12px; border: 5px solid #393939; border-top-color: #ffaa00; border-right-color: #ffaa00; border-radius: 50%; animation: spin .9s linear infinite; }
+    .loader-label { font-size: 13px; color: #e9e3d7; }
+    .loader-track { height: 5px; background: #383838; border-radius: 20px; overflow: hidden; margin-top: 12px; }
+    .loader-fill { height: 100%; width: 0; background: #ffaa00; transition: width .4s ease; }
+    .loader-percent { font-size: 12px; color: #aaa; margin-top: 8px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Startup splash overlay. */
+    #launch-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #151515;
+      color: #f5f2eb;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+    #launch-splash.is-ready { opacity: 0; visibility: hidden; pointer-events: none; }
+    .launch-inner { width: min(82vw, 320px); display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+    .launch-title { font-size: 20px; font-weight: 800; letter-spacing: .13em; }
+    .launch-subtitle { font-size: 12px; color: #b8b8b8; letter-spacing: .02em; }
+
+    /*
+    From Uiverse.io by Pradeepsaranbishnoi - https://uiverse.io/Pradeepsaranbishnoi/fast-cobra-20
+    MIT License, Copyright (c) Pradeepsaranbishnoi (Pradeep Saran)
+    */
+    .tereeza-ring-loader {
+      width: 200px;
+      height: 200px;
+      perspective: 200px;
+      position: relative;
+    }
+    .tereeza-ring-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      margin-top: -60px;
+      margin-left: -60px;
+      border-radius: 100px;
+      border: 40px outset #1e3f57;
+      transform-origin: 50% 50%;
+      transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+      background-color: transparent;
+      animation: tereeza-dot1 1000ms cubic-bezier(.49, .06, .43, .85) infinite;
+    }
+    .tereeza-ring-dot:nth-child(2) {
+      width: 140px;
+      height: 140px;
+      margin-top: -70px;
+      margin-left: -70px;
+      border-width: 30px;
+      border-color: #447891;
+      animation-name: tereeza-dot2;
+      animation-delay: 75ms;
+      box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1);
+      transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+    }
+    .tereeza-ring-dot:nth-child(3) {
+      width: 160px;
+      height: 160px;
+      margin-top: -80px;
+      margin-left: -80px;
+      border-width: 20px;
+      border-color: #6bb2cd;
+      animation-name: tereeza-dot3;
+      animation-delay: 150ms;
+      box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1);
+      transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px);
+    }
+    @keyframes tereeza-dot1 {
+      0%, 100% { border-color: #1e3f57; transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
+      50% { border-color: #1e574f; transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
+    }
+    @keyframes tereeza-dot2 {
+      0%, 100% { border-color: #447891; box-shadow: inset 0 0 15px 0 rgba(255, 255, 255, .2); transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
+      50% { border-color: #449180; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .8); transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
+    }
+    @keyframes tereeza-dot3 {
+      0%, 100% { border-color: #6bb2cd; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .1); transform: rotateX(24deg) rotateY(20deg) rotateZ(0deg) translateZ(-25px); }
+      50% { border-color: #6bcdb2; box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, .8); transform: rotateX(20deg) rotateY(20deg) rotateZ(50deg) translateZ(0px); }
+    }
+
+    @media (max-width: 520px) {
+      .wrap { padding: 16px 12px 40px; }
+      .powered { font-size: 9px; }
+      .metrics { gap: 7px; }
+      .metric { padding: 13px 8px; }
+      .metric strong { font-size: 20px; }
+      .metric small { font-size: 11px; }
+      .hero { margin-top: 55px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .loader-dial, .tereeza-ring-dot { animation: none; }
+      .loader-fill, #launch-splash { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+  From Uiverse.io by Pradeepsaranbishnoi - https://uiverse.io/Pradeepsaranbishnoi/fast-cobra-20
+  MIT License, Copyright (c) Pradeepsaranbishnoi (Pradeep Saran)
+  -->
+  <div id="launch-splash" role="status" aria-label="Loading Tereeza Speed" aria-live="polite">
+    <div class="launch-inner">
+      <div class="tereeza-ring-loader" aria-hidden="true">
+        <div class="tereeza-ring-dot"></div>
+        <div class="tereeza-ring-dot"></div>
+        <div class="tereeza-ring-dot"></div>
+      </div>
+      <div class="launch-title">TEREEZA SPEED</div>
+      <div class="launch-subtitle">Initializing your experience…</div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <header>
+      <img class="logo" src="/logo.png" alt="Tereeza">
+      <span class="powered">TEREEZA SPEED</span>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Your Internet Download Speed</div>
+      <div class="speed"><span id="speed">—</span><span class="unit"> Mbps</span></div>
+      <div id="status" class="status" role="status" aria-live="polite">Ready to test your internet connection</div>
+      <div id="test-loader" class="test-loader" hidden role="status" aria-live="polite">
+        <div class="loader-dial" aria-hidden="true"></div>
+        <div id="loader-label" class="loader-label">Connecting to test server…</div>
+        <div class="loader-track" aria-hidden="true"><div id="loader-fill" class="loader-fill"></div></div>
+        <div id="loader-percent" class="loader-percent">Preparing test</div>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <div class="metric"><small>↓ Download</small><strong id="down">—</strong> <em>Mbps</em></div>
+      <div class="metric"><small>↑ Upload</small><strong id="up">—</strong> <em>Mbps</em></div>
+      <div class="metric"><small>◷ Latency</small><strong id="ping">—</strong> <em>ms</em></div>
+    </section>
+
+    <section class="advisor">
+      <h2><span class="accent">✦</span> Tereeza Network Health Advisor</h2>
+      <p id="advice">Run a test to see how your connection handles everyday activities.</p>
+    </section>
+
+    <button id="run">Start Speed Test</button>
+    <button id="install" class="install" hidden>Install Tereeza Speed</button>
+
+    <footer>
+      An internet connection is required to run a speed test. Testing against Cloudflare's remote speed test endpoint — not localhost.
+      Results may differ from Fast.com because the destination and test methodology differ. Tests use mobile data or Wi-Fi data.
+      <p>© Tereeza Technologies · Don't just test your internet. Understand it.</p>
+    </footer>
+  </main>
+
+  <script>
+    // Remove startup splash when the document has rendered; prevent a stuck overlay.
+    (() => {
+      const splash = document.getElementById('launch-splash');
+      let dismissed = false;
+
+      function dismiss() {
+        if (dismissed) return;
+        dismissed = true;
+        splash.classList.add('is-ready');
+        setTimeout(() => splash.remove(), 450);
+      }
+
+      function ready() {
+        requestAnimationFrame(() => requestAnimationFrame(dismiss));
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', ready, { once: true });
+      } else {
+        ready();
+      }
+
+      setTimeout(dismiss, 3500);
+    })();
+  </script>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let deferredInstallPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.warn('PWA registration failed:', err));
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      $('install').hidden = false;
+    });
+
+    $('install').addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      const prompt = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      $('install').hidden = true;
+      await prompt.prompt();
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      $('install').hidden = true;
+    });
+
+    const ENDPOINT = 'https://speed.cloudflare.com';
+    let running = false;
+
+    function loader(visible, label = '', progress = null) {
+      const el = $('test-loader');
+      el.hidden = !visible;
+      if (!visible) return;
+      $('loader-label').textContent = label;
+      if (progress === null) {
+        $('loader-fill').style.width = '0%';
+        $('loader-percent').textContent = 'Testing…';
+      } else {
+        $('loader-fill').style.width = progress + '%';
+        $('loader-percent').textContent = 'Stage progress ' + progress + '%';
+      }
+    }
+
+    const timeout = ms => AbortSignal.timeout(ms);
+    const rate = (bytes, elapsed) => bytes * 8 / (elapsed * 1000);
+    const median = arr => {
+      const a = [...arr].sort((x, y) => x - y);
+      return a[Math.floor(a.length / 2)];
+    };
+
+    async function latency() {
+      const samples = [];
+      for (let i = 0; i < 5; i++) {
+        const start = performance.now();
+        const r = await fetch(`${ENDPOINT}/__down?bytes=0&r=${crypto.randomUUID()}`, {
+          cache: 'no-store',
+          signal: timeout(12000)
+        });
+        if (!r.ok) throw Error('Remote latency request failed');
+        await r.arrayBuffer();
+        samples.push(performance.now() - start);
+      }
+      return median(samples);
+    }
+
+    async function download() {
+      const samples = [];
+      for (const bytes of [1000000, 3000000, 5000000]) {
+        const start = performance.now();
+        const r = await fetch(`${ENDPOINT}/__down?bytes=${bytes}&r=${crypto.randomUUID()}`, {
+          cache: 'no-store',
+          signal: timeout(25000)
+        });
+        if (!r.ok) throw Error('Remote download request failed');
+        const received = (await r.arrayBuffer()).byteLength;
+        const ms = performance.now() - start;
+        if (received !== bytes) throw Error('Incomplete download');
+        samples.push(rate(received, ms));
+        $('speed').textContent = samples.at(-1).toFixed(1);
+      }
+      return median(samples);
+    }
+
+    async function upload() {
+      const samples = [];
+      const data = new Uint8Array(1000000);
+      crypto.getRandomValues(data.subarray(0, 65536));
+      for (let i = 0; i < 2; i++) {
+        const start = performance.now();
+        const r = await fetch(`${ENDPOINT}/__up?r=${crypto.randomUUID()}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: data,
+          cache: 'no-store',
+          signal: timeout(25000)
+        });
+        if (!r.ok) throw Error('Remote upload request failed');
+        await r.arrayBuffer();
+        samples.push(rate(data.length, performance.now() - start));
+      }
+      return median(samples);
+    }
+
+    function advice(d, u, p) {
+      if (p > 150) return 'High latency may affect calls and gaming. Try reducing background traffic and retesting.';
+      if (d < 5) return 'Your connection may struggle with HD streaming and large downloads. Check your signal and other active devices.';
+      if (u < 2) return 'Uploads may be slow, affecting video calls and file sharing.';
+      if (d >= 25 && u >= 5 && p < 70) return 'Your connection looks suitable for browsing, HD streaming and most video calls. Stability can still vary.';
+      return 'Your connection should handle basic browsing. Try reducing background downloads for smoother calls.';
+    }
+
+    $('run').onclick = async () => {
+      if (running) return;
+      if (!navigator.onLine) {
+        $('status').textContent = 'Offline — connect to the internet to run a speed test';
+        return;
+      }
+
+      running = true;
+      loader(true, 'Connecting to test server…', 5);
+      $('run').disabled = true;
+      $('run').textContent = 'Testing…';
+      $('speed').textContent = '…';
+      for (const id of ['down', 'up', 'ping']) $(id).textContent = '—';
+      $('advice').textContent = 'Testing a remote internet server…';
+
+      try {
+        loader(true, 'Checking latency…', 15);
+        $('status').textContent = 'Checking internet latency…';
+        const p = await latency();
+        $('ping').textContent = p.toFixed(0);
+
+        loader(true, 'Measuring download speed…', 40);
+        $('status').textContent = 'Measuring internet download…';
+        const d = await download();
+        $('down').textContent = d.toFixed(1);
+        $('speed').textContent = d.toFixed(1);
+
+        loader(true, 'Measuring upload speed…', 70);
+        $('status').textContent = 'Measuring internet upload…';
+        const u = await upload();
+        $('up').textContent = u.toFixed(1);
+
+        loader(true, 'Analyzing network health…', 95);
+        $('advice').textContent = advice(d, u, p);
+        $('status').textContent = 'Test complete';
+      } catch (e) {
+        console.error(e);
+        $('status').textContent = 'Remote speed test failed';
+        $('advice').textContent = 'The remote testing endpoint could not be reached or did not permit this request. Check your connection and browser console. No speed estimate has been invented.';
+      } finally {
+        loader(false);
+        running = false;
+        $('run').disabled = false;
+        $('run').textContent = 'Test Again';
+      }
+    };
+  </script>
+</body>
+</html>
